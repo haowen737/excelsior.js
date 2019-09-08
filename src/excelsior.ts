@@ -1,15 +1,15 @@
 import { DefaultExcelsiorConfig, ExcelsiorConfig } from './config'
 import { Validator } from './validator'
-import { reader } from './reader'
+import { reader } from './parser'
 
-export default class Excelsior {
+export class Excelsior {
 
   private mixedConfig: ExcelsiorConfig
-  private reader: Reader
+  // private reader: Reader
   public validator: Validator
   
 
-  constructor(config: ExcelsiorConfig) {
+  constructor(config: Partial<ExcelsiorConfig>) {
     this.mixedConfig = Object.assign({}, DefaultExcelsiorConfig, config)
     this.validator = new Validator()
   }
@@ -24,7 +24,7 @@ export default class Excelsior {
 
   /**
    * Parse xslx file, will do
-   * 1. file size check, split chunk
+   * 1. reader accept file, size check, split chunk
    * 2. create worker threads for each chunk
    * 3. run validtor in each threads
    * 4. merge result

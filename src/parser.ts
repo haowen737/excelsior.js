@@ -40,3 +40,7 @@ export function reader({
     })
   }
 }
+
+export function read2(file: File) {
+  
+}
