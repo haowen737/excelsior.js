@@ -17,6 +17,17 @@ function transform(worksheets: ExcelsiorSheet | ExcelsiorSheet[]) {
   return [excelsiorSheet().setName('sheet').setData(worksheets)]
 }
 
+/**
+ * TODO: Expose transform function
+ * csv html buffer file stream
+ *
+ * @param {*} result
+ */
+function resultTransform(result: any) {
+  toBuffer: () => Buffer.from(result)
+  toCSV: () => {}
+}
+
 export class Builder {
 
   static build(sheets: ExcelsiorSheet | ExcelsiorSheet[]) {
