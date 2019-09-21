@@ -2,6 +2,7 @@ import asv from "async-validator"
 import debug from 'debug'
 
 import { Column } from './config'
+import { isEmpty } from './utils'
 
 interface Descriptor {
   [key: string]: any[]

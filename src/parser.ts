@@ -61,26 +61,27 @@ export function fileReader(file: File, validate: ParseOptions['validate'] ) {
 }
 
 
-export function bufferReader(buffer: Buffer, validate: ParseOptions['validate']) {
+export function bufferReader(buffer: Buffer): Promise<[][]> {
   return new Promise((resolve, reject) => {
     const worker = new Worker(path.join(__dirname, './parser.worker.js'), { workerData: buffer })
     workerQueue.add(worker)
-    DEBUG(`worker set add ${workerQueue.size}`)
-    worker.on('message', (msg) => {
-      console.log('msg', msg)
-      resolve(msg)
-    })
-    worker.on('error', (er) => {
-      console.log(er)
-      reject(er)
-    },)
-    worker.on('exit', (msg) => {
+
+    DEBUG(`worker set ADD ${workerQueue.size}`)
+
+    worker.on('message', resolve)
+    worker.on('error', reject)
+    worker.on('exit', () => {
       workerQueue.delete(worker)
-      console.log('exit---', msg)
+      DEBUG(`worker set DELETE ${workerQueue.size}`)
     })
   })
 }
 
+/**
+ * TODO: design to expose [bufferReader, fileReader, base64Reader, etc.]
+ *
+ * @param {Buffer} buffer
+ */
 function mixReader(buffer: Buffer) {
 
 }
