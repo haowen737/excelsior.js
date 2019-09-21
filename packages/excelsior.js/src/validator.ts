@@ -7,7 +7,7 @@ interface Descriptor {
   [key: string]: any[]
 }
 
-const DEBUG = debug('xlsx-hero:validator')
+const DEBUG = debug('excelsior:validator')
 
 export class Validator {
 

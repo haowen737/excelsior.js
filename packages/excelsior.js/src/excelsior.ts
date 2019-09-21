@@ -1,6 +1,7 @@
 import { DefaultExcelsiorConfig, ExcelsiorConfig } from './config'
+import { ParseOptions, DefaultParseOptions } from './config/parser'
 import { Validator } from './validator'
-import { reader } from './parser'
+import { bufferReader } from './parser'
 
 export class Excelsior {
 
@@ -23,30 +24,22 @@ export class Excelsior {
   }
 
   /**
-   * Parse xslx file, will do
-   * 1. reader accept file, size check, split chunk
+   * Parse xslx fileBuffer, will do
+   * 1. reader accept fileBuffer, size check, split chunk
    * 2. create worker threads for each chunk
    * 3. run validtor in each threads
    * 4. merge result
    *
-   * @param {File} file
+   * @param {Buffer} fileBuffer
    * @memberof Excelsior
    */
-  public async parse(file: File) {
+  public async parse(fileBuffer: Buffer, parseOptions: ParseOptions = DefaultParseOptions) {
     const { columns } = this.mixedConfig
     this.validator.createSchema(columns)
 
-    reader({
-      onMessage: (msg) => {
-        console.log('msg', msg)
-      },
-      onError: (er) => {
-        console.log(er)
-      },
-      onExit: (msg) => {
-        console.log('msg', msg)
-      },
-    })
+    const { validate } = parseOptions
+    const data = await bufferReader(fileBuffer, validate)
+    return data
   }
   
 }
