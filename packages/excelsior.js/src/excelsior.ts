@@ -2,17 +2,17 @@ import { DefaultExcelsiorConfig, ExcelsiorConfig } from './config'
 import { ParseOptions, DefaultParseOptions } from './config/parser'
 import { Validator } from './validator'
 import { bufferReader } from './parser'
+import { compose } from './compose'
 
 export class Excelsior {
 
   private mixedConfig: ExcelsiorConfig
   // private reader: Reader
-  public validator: Validator
-  
+  // public validator: Validator
 
   constructor(config: Partial<ExcelsiorConfig>) {
     this.mixedConfig = Object.assign({}, DefaultExcelsiorConfig, config)
-    this.validator = new Validator()
+    // this.validator = new Validator()
   }
 
   /**
@@ -35,11 +35,16 @@ export class Excelsior {
    */
   public async parse(fileBuffer: Buffer, parseOptions: ParseOptions = DefaultParseOptions) {
     const { columns } = this.mixedConfig
-    this.validator.createSchema(columns)
+    // this.validator.createSchema(columns)
 
     const { validate } = parseOptions
-    const data = await bufferReader(fileBuffer, validate)
-    return data
+    const data = await bufferReader(fileBuffer)
+    const composed = await compose(data, { columns, validate })
+
+    return composed
+
+    // const filtered = 
+    // return data
   }
   
 }

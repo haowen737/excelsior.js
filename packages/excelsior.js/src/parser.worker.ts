@@ -12,13 +12,10 @@ DEBUG('buffer received')
 
 const readStart = new Date()
 
-DEBUG(`read start, cost ${new Date().valueOf() - readStart.valueOf()}`)
 const workBook = xlsx.read(workerData, { type: 'buffer' })
-
 const data = xlsx.utils.sheet_to_json(workBook.Sheets[workBook.SheetNames[0]], { header: 1 })
 
 DEBUG(`buffer created, cost ${new Date().valueOf() - readStart.valueOf()}`)
-
 parentPort && parentPort.postMessage(data)
 // // const datas = sheet.data
 // const datas: any = []
