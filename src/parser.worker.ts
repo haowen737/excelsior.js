@@ -6,43 +6,48 @@ import * as path from 'path'
 
 import { Validator } from "./validator"
 
-const DEBUG = debug('xlsx-hero:buffer-reader')
+const DEBUG = debug('excelsior:parser-worker')
 
 DEBUG('buffer received')
 
-const parseStart = new Date()
-const buf = Buffer.from(workerData)
-// const sheet = xlsx.parse(buf, { raw: false })[0]
+const readStart = new Date()
 
-DEBUG(`buffer created, cost ${new Date().valueOf() - parseStart.valueOf()}`)
-// const datas = sheet.data
-const datas: any = []
+DEBUG(`read start, cost ${new Date().valueOf() - readStart.valueOf()}`)
+const workBook = xlsx.read(workerData, { type: 'buffer' })
 
-const threadCount = 10
-const workerSet = new Set()
-const dataLength = datas.length
-const start = 0
+const data = xlsx.utils.sheet_to_json(workBook.Sheets[workBook.SheetNames[0]], { header: 1 })
 
-for (let i = 0; i < threadCount; i++) {
-  const end = Math.ceil(dataLength / threadCount)
-  const chunk = datas.splice(start, end)
-  const validatorWorker = new Worker(path.join(__dirname, './validatorWorker.js'), {
-    workerData: chunk
-  })
+DEBUG(`buffer created, cost ${new Date().valueOf() - readStart.valueOf()}`)
 
-  validatorWorker.on('message', (msg) => {
-    console.log('validatorWorker msg', msg)
-  })
+parentPort && parentPort.postMessage(data)
+// // const datas = sheet.data
+// const datas: any = []
 
-  validatorWorker.on('exit', (err) => {
-    console.log('validatorWorker exit', err)
-    workerSet.delete(validatorWorker)
-    DEBUG(`validate thread ${i} deleted, workerSet.size${workerSet.size}`)
-  })
+// const threadCount = 10
+// const workerSet = new Set()
+// const dataLength = datas.length
+// const start = 0
 
-  workerSet.add(validatorWorker)
-  DEBUG(`validate thread ${i} created, workerSet.size${workerSet.size}`)
-}
+// for (let i = 0; i < threadCount; i++) {
+//   const end = Math.ceil(dataLength / threadCount)
+//   const chunk = datas.splice(start, end)
+//   const validatorWorker = new Worker(path.join(__dirname, './validatorWorker.js'), {
+//     workerData: chunk
+//   })
+
+//   validatorWorker.on('message', (msg) => {
+//     console.log('validatorWorker msg', msg)
+//   })
+
+//   validatorWorker.on('exit', (err) => {
+//     console.log('validatorWorker exit', err)
+//     workerSet.delete(validatorWorker)
+//     DEBUG(`validate thread ${i} deleted, workerSet.size${workerSet.size}`)
+//   })
+
+//   workerSet.add(validatorWorker)
+//   DEBUG(`validate thread ${i} created, workerSet.size${workerSet.size}`)
+// }
 
 
-parentPort && parentPort.postMessage(datas)
+// parentPort && parentPort.postMessage(datas)
