@@ -2,6 +2,7 @@ import { Worker, isMainThread, workerData } from 'worker_threads'
 import debug from 'debug'
 import * as path from 'path'
 import { AssertionError } from 'assert';
+import { ExcelsiorParseTarget } from './config'
 import { ParseOptions } from './config/parser';
 import { ParserOptions } from '@babel/core';
 const DEBUG = debug('excelsior:parser')
@@ -61,7 +62,7 @@ export function fileReader(file: File, validate: ParseOptions['validate'] ) {
 }
 
 
-export function bufferReader(buffer: Buffer): Promise<[][]> {
+export function bufferReader(buffer: ExcelsiorParseTarget): Promise<[][]> {
   return new Promise((resolve, reject) => {
     const worker = new Worker(path.join(__dirname, './parser.worker.js'), { workerData: buffer })
     workerQueue.add(worker)

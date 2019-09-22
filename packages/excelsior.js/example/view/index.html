@@ -18,7 +18,7 @@
       id="file1"
       accept='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
     >上传</input>
-    <div class="summary">validate xlsx cost: {{detail || '??'}} ms</div>
+    <div class="summary">validate xlsx cost: {{cost || '??'}} ms</div>
     <div class="summary">err: {{errs}}</div>
     <ul>
       <li v-for="(it, i) in list">{{i}}&nbsp;&nbsp;{{it}}</li>
@@ -47,9 +47,9 @@ new Vue({
       fetch(path, { method: 'POST', body: data })
         .then(res => res.json())
         .then((res) => {
-          const { data, detail, msg } = res
+          const { data, cost, msg } = res
           this.list = data || []
-          this.detail = detail || {}
+          this.cost = cost || {}
           this.errs = msg
         })
         .catch(err => {

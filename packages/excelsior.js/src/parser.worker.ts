@@ -5,6 +5,7 @@ import debug from 'debug'
 import * as path from 'path'
 
 import { Validator } from "./validator"
+import { isString } from './utils'
 
 const DEBUG = debug('excelsior:parser-worker')
 
@@ -12,7 +13,10 @@ DEBUG('buffer received')
 
 const readStart = new Date()
 
-const workBook = xlsx.read(workerData, { type: 'buffer' })
+const workBook = isString(workerData) ?
+  xlsx.read(workerData, { type: 'file' }) :
+  xlsx.read(workerData, { type: 'buffer' })
+
 const data = xlsx.utils.sheet_to_json(workBook.Sheets[workBook.SheetNames[0]], { header: 1 })
 
 DEBUG(`buffer created, cost ${new Date().valueOf() - readStart.valueOf()}`)

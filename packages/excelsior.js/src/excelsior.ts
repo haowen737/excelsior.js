@@ -1,8 +1,8 @@
-import { DefaultExcelsiorConfig, ExcelsiorConfig } from './config'
+import { DefaultExcelsiorConfig, ExcelsiorConfig, ExcelsiorParseTarget } from './config'
 import { ParseOptions, DefaultParseOptions } from './config/parser'
 import { Validator } from './validator'
 import { bufferReader } from './parser'
-import { compose } from './compose'
+import { compose, composeInMainThread } from './compose'
 
 export class Excelsior {
 
@@ -33,16 +33,16 @@ export class Excelsior {
    * @param {Buffer} fileBuffer
    * @memberof Excelsior
    */
-  public async parse(fileBuffer: Buffer, parseOptions: ParseOptions = DefaultParseOptions) {
-    const { columns } = this.mixedConfig
-    // this.validator.createSchema(columns)
+  public async parse(mixedFile: ExcelsiorParseTarget, parseOptions: ParseOptions = DefaultParseOptions) {
 
-    const { validate } = parseOptions
-    const data = await bufferReader(fileBuffer)
-    const composed = await compose(data, { columns, validate })
+      const { columns } = this.mixedConfig
+      // this.validator.createSchema(columns)
 
-    return composed
+      const { validate } = parseOptions
+      const data = await bufferReader(mixedFile)
+      const composed = await compose(data, { columns, validate })
 
+      return composed
     // const filtered = 
     // return data
   }
