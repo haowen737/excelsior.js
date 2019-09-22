@@ -28,10 +28,11 @@ router.post('/upload', upload.any(), async (ctx) => {
     const { req } = ctx
     const file = req.files[0]
     const excelsior = new Excelsior(schema)
+    const start = new Date()
     const data = await excelsior.parse(file.buffer)
 
     // const data = await excelsior.validate(file)
-    ctx.body = { data }
+    ctx.body = { data, cost: new Date() - start }
   } catch(err) {
     ctx.status = 400
     ctx.body = { msg: err.message }

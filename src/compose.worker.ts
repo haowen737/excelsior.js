@@ -62,7 +62,6 @@ function makeRow<T>(content: XlsxRow[] | any[], index: number): T | any {
 }
 
 let composed = []
-aoa.shift()
 for (let i = 0; i < aoa.length; i++) {
   const currentRow = aoa[i]
   const row = makeRow(currentRow, i)

@@ -35,3 +35,5 @@ export const DefaultExcelsiorConfig: ExcelsiorConfig = {
     EXCEED_MAX_LENGTH: 'exceed max length'
   }
 }
+
+export type ExcelsiorParseTarget = string | Buffer

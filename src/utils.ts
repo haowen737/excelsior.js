@@ -4,3 +4,7 @@ export function isEmpty(value: any) {
   }
   return false
 }
+
+export function isString(s: any): s is string {
+  return typeof s === 'string'
+}
